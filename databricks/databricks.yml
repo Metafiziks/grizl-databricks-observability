@@ -1,0 +1,112 @@
+bundle:
+  name: grizl-observability
+
+workspace:
+  host: ${var.databricks_host}
+
+variables:
+  databricks_host:
+    description: "Databricks workspace URL (e.g. https://<workspace-id>.cloud.databricks.com)"
+
+  gcs_logs_path:
+    description: "GCS path for the Pub/Sub Cloud Storage export (e.g. gs://grizl-logs-export/logs/)"
+
+  checkpoint_volume:
+    description: "UC Volume path for Auto Loader schema checkpoints"
+    default: "/Volumes/grizl/observability/checkpoints/raw_logs_schema"
+
+  github_token:
+    description: "GitHub PAT with issues:write permission"
+
+  repo_map_json:
+    description: "JSON object mapping service name to owner/repo, e.g. {\"grizl-backend\":\"owner/backend-repo\",\"grizl-frontend\":\"owner/frontend-repo\",\"grizl-log-forwarder\":\"owner/backend-repo\"}"
+    default: "{}"
+
+  github_fallback_repo:
+    description: "GitHub repo (owner/repo) to use when service is not in repo_map_json"
+    default: ""
+
+  copilot_enabled:
+    description: "Assign Copilot to code-actionable issues (true/false)"
+    default: "true"
+
+  copilot_assignee:
+    description: "GitHub username for Copilot handoff"
+    default: "Copilot"
+
+  genie_space_id:
+    description: "Databricks Genie space ID for AI/BI evidence gathering (leave blank to use Spark SQL fallback)"
+    default: ""
+
+  anomaly_score_threshold:
+    description: "Minimum anomaly_score to include in Workflow webhook payload"
+    default: "1.5"
+
+  sql_warehouse_id:
+    description: "SQL warehouse ID for provisioning and SQL alerts"
+
+targets:
+  dev:
+    default: true
+    mode: development
+
+  prod:
+    mode: production
+
+resources:
+
+  # ── DLT Auto Loader Pipeline ────────────────────────────────────────────────
+  pipelines:
+    grizl_autoloader_pipeline:
+      name: grizl-autoloader-pipeline
+      target: observability
+      catalog: grizl
+      development: ${bundle.target == 'dev'}
+      configuration:
+        grizl.gcs_logs_path: ${var.gcs_logs_path}
+        grizl.checkpoint_volume: ${var.checkpoint_volume}
+      libraries:
+        - notebook:
+            path: ../notebooks/01_autoloader_pipeline
+      channel: CURRENT
+      continuous: false
+      photon: false
+
+  # ── Anomaly Signals Workflow Job ────────────────────────────────────────────
+  jobs:
+    grizl_anomaly_signals_job:
+      name: grizl-anomaly-signals-job
+      description: >
+        Runs the GRIZL anomaly signal union query every 5 minutes, collects
+        direct SQL evidence from Delta tables, and creates a GitHub issue for
+        each anomaly batch — optionally assigning Copilot for code-actionable
+        incidents. Equivalent to the Fabric Activator trigger on
+        GrizlRecentAnomalySignals().
+      schedule:
+        quartz_cron_expression: "0 0/5 * * * ?"
+        timezone_id: UTC
+        pause_status: ${bundle.target == 'dev' ? 'PAUSED' : 'UNPAUSED'}
+      tasks:
+        - task_key: anomaly_signals
+          notebook_task:
+            notebook_path: ../notebooks/04_anomaly_signals_workflow
+            base_parameters:
+              score_threshold: ${var.anomaly_score_threshold}
+              dry_run: "false"
+              github_token: ${var.github_token}
+              repo_map_json: ${var.repo_map_json}
+              github_fallback_repo: ${var.github_fallback_repo}
+              copilot_enabled: ${var.copilot_enabled}
+              copilot_assignee: ${var.copilot_assignee}
+              genie_space_id: ${var.genie_space_id}
+              sql_warehouse_id: ${var.sql_warehouse_id}
+          existing_cluster_id: ""
+          new_cluster:
+            spark_version: "15.4.x-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 0
+            spark_conf:
+              spark.databricks.cluster.profile: singleNode
+              spark.master: local[*, 4]
+            data_security_mode: SINGLE_USER
+            runtime_engine: STANDARD

@@ -1,0 +1,26 @@
+{
+  "name": "@grizl/databricks-provisioning",
+  "version": "0.1.0",
+  "private": true,
+  "description": "GRIZL Databricks provisioning, SQL view setup, monitor management, and Genie scaffolding.",
+  "license": "UNLICENSED",
+  "scripts": {
+    "check": "bash scripts/check.sh",
+    "preflight": "bash scripts/preflight.sh",
+    "provision:dry-run": "bash scripts/provision.sh --dry-run --all",
+    "provision": "bash scripts/provision.sh --all --yes",
+    "sql:observability:dry-run": "bash scripts/sql-exec.sh --dry-run --file sql/grizl-observability.sql",
+    "sql:observability": "bash scripts/sql-exec.sh --file sql/grizl-observability.sql --yes",
+    "sql:anomaly-signals:dry-run": "bash scripts/sql-exec.sh --dry-run --file sql/grizl-anomaly-signals.sql",
+    "sql:anomaly-signals": "bash scripts/sql-exec.sh --file sql/grizl-anomaly-signals.sql --yes",
+    "gcs-subscription:dry-run": "bash scripts/gcs-subscription.sh ${GCS_BUCKET:-<bucket>} dry-run",
+    "gcs-subscription": "bash scripts/gcs-subscription.sh",
+    "genie:list": "bash scripts/genie-mgmt.sh list",
+    "genie:get": "bash scripts/genie-mgmt.sh get",
+    "monitor:get": "bash scripts/monitor-mgmt.sh get",
+    "monitor:refresh": "bash scripts/monitor-mgmt.sh refresh --yes",
+    "monitor:list-runs": "bash scripts/monitor-mgmt.sh list-runs",
+    "teardown:dry-run": "bash scripts/teardown.sh --dry-run",
+    "teardown": "bash scripts/teardown.sh --yes"
+  }
+}

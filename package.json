@@ -1,0 +1,19 @@
+{
+  "name": "@grizl/databricks-observability",
+  "version": "0.1.0",
+  "private": true,
+  "description": "GRIZL Databricks observability package — Delta table ingestion, SQL views, anomaly signals, Genie evidence agent, and SQL Alert/Workflow incident triggers.",
+  "license": "UNLICENSED",
+  "scripts": {
+    "databricks:check": "npm --prefix databricks run check",
+    "databricks:preflight": "npm --prefix databricks run preflight",
+    "databricks:provision:dry-run": "npm --prefix databricks run provision:dry-run",
+    "databricks:provision": "npm --prefix databricks run provision",
+    "databricks:sql:observability:dry-run": "npm --prefix databricks run sql:observability:dry-run",
+    "databricks:sql:observability": "npm --prefix databricks run sql:observability",
+    "databricks:sql:anomaly-signals:dry-run": "npm --prefix databricks run sql:anomaly-signals:dry-run",
+    "databricks:sql:anomaly-signals": "npm --prefix databricks run sql:anomaly-signals",
+    "databricks:teardown:dry-run": "npm --prefix databricks run teardown:dry-run",
+    "databricks:teardown": "npm --prefix databricks run teardown"
+  }
+}

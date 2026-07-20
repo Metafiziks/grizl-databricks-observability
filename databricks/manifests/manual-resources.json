@@ -1,0 +1,97 @@
+{
+  "_comment": "Resources that must be created manually in the Databricks UI or GCP Console because their creation is not fully automatable via the Databricks CLI or REST API. Equivalent to the Fabric manual-resources.json.",
+  "manual_resources": [
+    {
+      "name": "GCS Pub/Sub Cloud Storage Export Subscription",
+      "platform": "GCP",
+      "why_manual": "gcloud CLI setup; requires GCP project permissions outside this repo.",
+      "steps": [
+        "gsutil mb -l <REGION> gs://<GRIZL_GCS_LOGS_BUCKET>",
+        "gcloud pubsub subscriptions create grizl-logs-gcs-export --topic=<PUBSUB_TOPIC> --project=<GCP_PROJECT_ID> --cloud-storage-bucket=<GRIZL_GCS_LOGS_BUCKET> --cloud-storage-file-prefix=logs/ --cloud-storage-file-suffix=.jsonl --cloud-storage-max-duration=60s --cloud-storage-output-format=text",
+        "gsutil iam ch serviceAccount:<DATABRICKS_GSA>@<GCP_PROJECT_ID>.iam.gserviceaccount.com:objectViewer gs://<GRIZL_GCS_LOGS_BUCKET>",
+        "Or use: GCS_BUCKET=<bucket> npm --prefix databricks run gcs-subscription",
+        "NOTE: the existing pull subscription is consumed by grizl-log-forwarder; the new gcs-export subscription runs in parallel, zero forwarder changes required"
+      ],
+      "env_vars": ["GRIZL_GCS_LOGS_BUCKET", "GCP_PROJECT_ID", "PUBSUB_TOPIC"]
+    },
+    {
+      "name": "Databricks SQL Warehouse",
+      "platform": "Databricks",
+      "why_manual": "Warehouse creation requires capacity allocation decisions (size, auto-stop, type).",
+      "steps": [
+        "Open Databricks SQL → SQL Warehouses → Create warehouse",
+        "Choose Serverless or Classic (Serverless recommended for lower cold-start latency)",
+        "Set auto-stop to 10 minutes",
+        "Copy the warehouse ID into DATABRICKS_WAREHOUSE_ID"
+      ],
+      "env_vars": ["DATABRICKS_WAREHOUSE_ID"]
+    },
+    {
+      "name": "DLT Auto Loader Pipeline",
+      "platform": "Databricks",
+      "why_manual": "Deployed via databricks bundle deploy after configuring databricks/databricks.yml.",
+      "steps": [
+        "Set variables in databricks/databricks.yml (gcs_logs_path, incident_webhook_url)",
+        "databricks bundle deploy --target dev",
+        "Copy the DLT pipeline ID into DATABRICKS_DLT_PIPELINE_ID",
+        "Start the pipeline: Workflows → Delta Live Tables → grizl-autoloader-pipeline → Start"
+      ],
+      "env_vars": ["DATABRICKS_DLT_PIPELINE_ID"]
+    },
+    {
+      "name": "Genie Space (AI/BI Genie)",
+      "platform": "Databricks",
+      "why_manual": "Genie space creation and table configuration is UI-only.",
+      "steps": [
+        "Open Databricks → AI/BI → Genie → New space",
+        "Title: grizl-observability",
+        "Add tables from databricks/manifests/genie-space-settings.example.json",
+        "Add example questions from the same file",
+        "Publish the space",
+        "Copy the space ID from the URL into DATABRICKS_GENIE_SPACE_ID",
+        "Smoke-test: bash databricks/scripts/genie-mgmt.sh ask 'What are the recent errors for grizl-backend?'"
+      ],
+      "env_vars": ["DATABRICKS_GENIE_SPACE_ID"]
+    },
+    {
+      "name": "Lakehouse Monitor",
+      "platform": "Databricks",
+      "why_manual": "Created by running notebooks/02_lakehouse_monitor_setup.py once in the workspace.",
+      "steps": [
+        "Open notebooks/02_lakehouse_monitor_setup.py in the Databricks workspace",
+        "Attach to a cluster with Databricks Runtime 13.3 LTS+",
+        "Run all cells",
+        "Verify output tables: grizl.observability_monitors.raw_logs_profile",
+        "Set up SQL Alerts on drift metrics (see sql/grizl-alert-queries.sql Alert 8)"
+      ]
+    },
+    {
+      "name": "Databricks Service Principal",
+      "platform": "Databricks / GCP",
+      "why_manual": "Requires account-level admin access to create service principals.",
+      "steps": [
+        "Open Databricks account console → Service principals → Add service principal",
+        "Generate a client secret",
+        "Grant the SP workspace access with 'User' role",
+        "Grant Unity Catalog permissions: USE CATALOG grizl, USE SCHEMA observability, SELECT on all views and tables",
+        "Store client_id in DATABRICKS_CLIENT_ID (non-secret)",
+        "Store client_secret in GCP Secret Manager as DATABRICKS_CLIENT_SECRET"
+      ],
+      "env_vars": ["DATABRICKS_CLIENT_ID"]
+    },
+    {
+      "name": "Databricks SQL Alerts",
+      "platform": "Databricks",
+      "why_manual": "SQL Alert creation and webhook destination setup is UI-based.",
+      "steps": [
+        "Open Databricks SQL → Alerts → Create alert",
+        "For each query in sql/grizl-alert-queries.sql, create a corresponding alert",
+        "Alert action option A (Slack): create a webhook destination pointing at your Slack incoming webhook URL",
+        "Alert action option B (backend webhook): configure webhook destination URL = https://<backend>/api/databricks/incidents with header x-grizl-databricks-secret — only if a backend incident endpoint is implemented",
+        "The Workflow job (notebooks/04_anomaly_signals_workflow.py) is the preferred action path — it creates GitHub issues directly and does not require a backend webhook endpoint",
+        "Enable the alert"
+      ],
+      "notes": "The grizl-backend already has a telemetry sink at POST /api/telemetry (frontend browser events) and a LangGraph-based chat quality agent (apps/agent-runtime/) for anomaly detection on the chat flow. Infrastructure anomaly actions from Databricks are separate and can go directly to GitHub or Slack without requiring a backend webhook endpoint."
+    }
+  ]
+}

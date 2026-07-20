@@ -1,0 +1,47 @@
+{
+  "_comment": "Reference configuration for the Lakehouse Monitor on grizl.observability.raw_logs. Applied by running notebooks/02_lakehouse_monitor_setup.py in the workspace. Equivalent documentation to the Fabric Eventstream/Eventhouse config.",
+  "table_name": "grizl.observability.raw_logs",
+  "time_series": {
+    "timestamp_col": "ingest_timestamp",
+    "granularities": ["5 minutes", "1 hour", "1 day"]
+  },
+  "slicing_exprs": ["service", "environment", "severity"],
+  "custom_metrics": [
+    {
+      "name": "error_rate",
+      "input_columns": ["severity"],
+      "definition": "AVG(CASE WHEN severity IN ('ERROR', 'CRITICAL') THEN 1.0 ELSE 0.0 END)",
+      "type": "CUSTOM_METRIC_TYPE_AGGREGATE"
+    },
+    {
+      "name": "http_5xx_rate",
+      "input_columns": ["status_code"],
+      "definition": "AVG(CASE WHEN status_code >= 500 THEN 1.0 ELSE 0.0 END)",
+      "type": "CUSTOM_METRIC_TYPE_AGGREGATE"
+    },
+    {
+      "name": "p95_duration_ms",
+      "input_columns": ["duration_ms"],
+      "definition": "PERCENTILE(duration_ms, 0.95)",
+      "type": "CUSTOM_METRIC_TYPE_AGGREGATE"
+    },
+    {
+      "name": "p99_duration_ms",
+      "input_columns": ["duration_ms"],
+      "definition": "PERCENTILE(duration_ms, 0.99)",
+      "type": "CUSTOM_METRIC_TYPE_AGGREGATE"
+    },
+    {
+      "name": "deployment_sha_count",
+      "input_columns": ["deployment_sha"],
+      "definition": "COUNT(DISTINCT deployment_sha)",
+      "type": "CUSTOM_METRIC_TYPE_AGGREGATE"
+    }
+  ],
+  "output_schema_name": "grizl.observability_monitors",
+  "assets_dir": "/Shared/grizl/observability/monitors",
+  "output_tables": {
+    "profile": "grizl.observability_monitors.raw_logs_profile",
+    "drift_metrics": "grizl.observability_monitors.raw_logs_drift_metrics"
+  }
+}
