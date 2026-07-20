@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="627" viewBox="0 0 1200 627" role="img" aria-labelledby="bannerTitle bannerDesc">
+  <title id="bannerTitle">Part VI Databricks anomaly signal banner</title>
+  <desc id="bannerDesc">Editorial banner for a LinkedIn article about Databricks Delta Lake SQL anomaly detection and GitHub incident automation.</desc>
+  <defs>
+    <linearGradient id="mainBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0"    stop-color="#0a090e"/>
+      <stop offset="0.55" stop-color="#0d0c14"/>
+      <stop offset="1"    stop-color="#0c0906"/>
+    </linearGradient>
+    <radialGradient id="leftBloom" cx="28%" cy="60%" r="52%">
+      <stop offset="0"   stop-color="#FF6835" stop-opacity="0.16"/>
+      <stop offset="0.6" stop-color="#c43d00" stop-opacity="0.05"/>
+      <stop offset="1"   stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="panelBloom" cx="80%" cy="40%" r="35%">
+      <stop offset="0"   stop-color="#00E5CF" stop-opacity="0.10"/>
+      <stop offset="1"   stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="1.1" fill="#00E5CF" fill-opacity="0.07"/>
+    </pattern>
+    <filter id="spike" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Ground -->
+  <rect width="1200" height="627" fill="url(#mainBg)"/>
+  <rect width="1200" height="627" fill="url(#dots)"/>
+  <rect width="1200" height="627" fill="url(#leftBloom)"/>
+  <rect width="1200" height="627" fill="url(#panelBloom)"/>
+
+  <!-- Top rule: short orange line -->
+  <line x1="72" y1="66" x2="620" y2="66" stroke="#FF6835" stroke-width="2.5" stroke-opacity="0.65"/>
+
+  <!-- ── LEFT TEXT BLOCK ─────────────────────────────── -->
+  <g transform="translate(72,82)">
+    <!-- Series eyebrow -->
+    <text font-family="Menlo,Consolas,'Courier New',monospace" font-size="18" letter-spacing="4.5" fill="#00E5CF">PART VI / DATABRICKS</text>
+
+    <!-- Headline -->
+    <text y="90"  font-family="Georgia,'Times New Roman',serif" font-weight="800" font-size="72" letter-spacing="-2.5" fill="#F0EEE8">I PORTED THE</text>
+    <text y="168" font-family="Georgia,'Times New Roman',serif" font-weight="800" font-size="72" letter-spacing="-2.5" fill="#F0EEE8">PANIC BUTTON</text>
+    <text y="246" font-family="Georgia,'Times New Roman',serif" font-weight="800" font-size="72" letter-spacing="-2.5" fill="#FF6835">TO DATABRICKS</text>
+
+    <!-- Sub-headline -->
+    <text y="306" font-family="Menlo,Consolas,'Courier New',monospace" font-size="21" fill="#7A8FA6">Delta. SQL z-scores. Issues with receipts.</text>
+  </g>
+
+  <!-- Bottom divider -->
+  <line x1="72" y1="538" x2="640" y2="538" stroke="#1c1c26" stroke-width="1"/>
+
+  <!-- Pipeline pill -->
+  <rect x="72" y="552" width="470" height="50" rx="25" fill="#FF6835"/>
+  <text x="88" y="583" font-family="Menlo,Consolas,'Courier New',monospace" font-size="18" font-weight="700" fill="#0b0907" letter-spacing="0.2">PUBSUB &#8594; DELTA &#8594; WORKFLOW &#8594; GITHUB</text>
+
+  <!-- ── RIGHT PANEL ─────────────────────────────────── -->
+  <!-- Panel outer glow -->
+  <rect x="736" y="58" width="408" height="484" rx="26" fill="#FF6835" fill-opacity="0.04" filter="url(#softGlow)"/>
+  <!-- Panel body -->
+  <rect x="740" y="62" width="400" height="476" rx="24" fill="#08080c" stroke="#FF6835" stroke-width="1.5" stroke-opacity="0.6"/>
+
+  <!-- Header bar -->
+  <rect x="740" y="62" width="400" height="46" rx="24" fill="#FF6835" fill-opacity="0.10"/>
+  <rect x="740" y="84" width="400" height="24" fill="#FF6835" fill-opacity="0.10"/>
+  <!-- Traffic dots -->
+  <circle cx="772" cy="85" r="6.5" fill="#FF6835" fill-opacity="0.55"/>
+  <circle cx="796" cy="85" r="6.5" fill="#6a7a8a" fill-opacity="0.3"/>
+  <circle cx="820" cy="85" r="6.5" fill="#6a7a8a" fill-opacity="0.3"/>
+  <!-- Header label -->
+  <text x="850" y="91" font-family="Menlo,Consolas,'Courier New',monospace" font-size="15" letter-spacing="3" fill="#00E5CF">Z-SCORE / 5-MIN BINS</text>
+
+  <!-- Chart inner area: x 760..1120, y 120..490 -->
+  <!-- Horizontal grid lines at z = 0, 2, 4, 6 -->
+  <!-- y = 490 - (z/7)*370 -->
+  <!-- z=0 → 490, z=2 → 384, z=4 → 278, z=6 → 173 -->
+  <line x1="762" y1="490" x2="1118" y2="490" stroke="#1e1e2c" stroke-width="1"/>
+  <line x1="762" y1="384" x2="1118" y2="384" stroke="#1e1e2c" stroke-width="1"/>
+  <line x1="762" y1="278" x2="1118" y2="278" stroke="#1e1e2c" stroke-width="1"/>
+  <line x1="762" y1="173" x2="1118" y2="173" stroke="#1e1e2c" stroke-width="1"/>
+
+  <!-- Y-axis labels -->
+  <text x="758" y="494" text-anchor="end" font-family="Menlo,Consolas,monospace" font-size="12" fill="#36465a">0</text>
+  <text x="758" y="388" text-anchor="end" font-family="Menlo,Consolas,monospace" font-size="12" fill="#36465a">2</text>
+  <text x="758" y="282" text-anchor="end" font-family="Menlo,Consolas,monospace" font-size="12" fill="#36465a">4</text>
+  <text x="758" y="177" text-anchor="end" font-family="Menlo,Consolas,monospace" font-size="12" fill="#36465a">6</text>
+
+  <!-- Threshold dashed line at z=1.5 → y = 490 - (1.5/7)*370 = 490 - 79.3 = 411 -->
+  <line x1="762" y1="411" x2="1118" y2="411" stroke="#FF6835" stroke-width="1.2" stroke-dasharray="6 4" stroke-opacity="0.5"/>
+  <text x="1122" y="415" font-family="Menlo,Consolas,monospace" font-size="12" fill="#FF6835" fill-opacity="0.65">1.5</text>
+
+  <!-- Time-series line: 10 points -->
+  <!-- x positions evenly spaced 762..1110: step = (1110-762)/9 = 38.7 -->
+  <!-- x: 762, 801, 840, 878, 917, 956, 994, 1033, 1072, 1110 -->
+  <!-- z values: 0.3, 0.5, 0.2, 0.7, 0.3, 0.9, 0.4, 0.6, 0.8, 5.49 -->
+  <!-- y = 490 - (z/7)*370 -->
+  <!-- 0.3→474, 0.5→464, 0.2→479, 0.7→453, 0.3→474, 0.9→442, 0.4→469, 0.6→458, 0.8→448, 5.49→200 -->
+  <polyline
+    points="762,474 801,464 840,479 878,453 917,474 956,442 994,469 1033,458 1072,448 1110,200"
+    fill="none"
+    stroke="#00E5CF"
+    stroke-width="2.8"
+    stroke-linejoin="round"
+    stroke-linecap="round"
+    filter="url(#spike)"
+  />
+  <!-- Area fill -->
+  <polygon
+    points="762,474 801,464 840,479 878,453 917,474 956,442 994,469 1033,458 1072,448 1110,200 1110,490 762,490"
+    fill="#00E5CF"
+    fill-opacity="0.045"
+  />
+  <!-- Dot markers on baseline points -->
+  <circle cx="762"  cy="474" r="3.5" fill="#00E5CF" fill-opacity="0.5"/>
+  <circle cx="801"  cy="464" r="3.5" fill="#00E5CF" fill-opacity="0.5"/>
+  <circle cx="840"  cy="479" r="3.5" fill="#00E5CF" fill-opacity="0.5"/>
+  <circle cx="878"  cy="453" r="3.5" fill="#00E5CF" fill-opacity="0.5"/>
+  <circle cx="917"  cy="474" r="3.5" fill="#00E5CF" fill-opacity="0.5"/>
+  <circle cx="956"  cy="442" r="3.5" fill="#00E5CF" fill-opacity="0.5"/>
+  <circle cx="994"  cy="469" r="3.5" fill="#00E5CF" fill-opacity="0.5"/>
+  <circle cx="1033" cy="458" r="3.5" fill="#00E5CF" fill-opacity="0.5"/>
+  <circle cx="1072" cy="448" r="3.5" fill="#00E5CF" fill-opacity="0.5"/>
+  <!-- Spike point -->
+  <circle cx="1110" cy="200" r="13" fill="#FF6835" fill-opacity="0.28" filter="url(#spike)"/>
+  <circle cx="1110" cy="200" r="8"  fill="#FF6835"/>
+  <circle cx="1110" cy="200" r="4"  fill="#F0EEE8"/>
+
+  <!-- Spike annotation bubble -->
+  <rect x="1020" y="154" width="118" height="30" rx="7" fill="#FF6835" fill-opacity="0.18"/>
+  <rect x="1020" y="154" width="118" height="30" rx="7" fill="none" stroke="#FF6835" stroke-width="1" stroke-opacity="0.5"/>
+  <text x="1079" y="175" text-anchor="middle" font-family="Menlo,Consolas,'Courier New',monospace" font-size="17" font-weight="700" fill="#FF6835">z = 5.49</text>
+  <!-- Connector -->
+  <line x1="1079" y1="184" x2="1110" y2="200" stroke="#FF6835" stroke-width="1.2" stroke-opacity="0.55" stroke-dasharray="4 3"/>
+
+  <!-- Bottom info rows -->
+  <line x1="762" y1="504" x2="1118" y2="504" stroke="#1c1c26" stroke-width="1"/>
+  <text x="762" y="522" font-family="Menlo,Consolas,monospace" font-size="13" fill="#3d5060">service: grizl-backend  route: /api/chat</text>
+  <text x="762" y="540" font-family="Menlo,Consolas,monospace" font-size="13" fill="#FF6835" fill-opacity="0.75">&#8594; issue #261 &#183; copilot assigned &#183; PR opened in 54s</text>
+
+  <!-- Brand -->
+  <text transform="rotate(-90 1178 498)" x="1178" y="498" font-family="Menlo,Consolas,monospace" font-size="15" fill="#2a3a48">METAFIZIK</text>
+</svg>

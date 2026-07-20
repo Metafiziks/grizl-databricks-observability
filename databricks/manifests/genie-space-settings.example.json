@@ -1,0 +1,59 @@
+{
+  "_comment": "Reference for configuring the GRIZL Genie space in the Databricks UI (AI/BI → Genie → New space). Genie space creation is UI-only; this file documents the intended configuration. Equivalent to Fabric Data Agent settings.",
+  "title": "grizl-observability",
+  "description": "GRIZL incident evidence assistant over observability Delta tables in Unity Catalog. Answers natural language questions about application errors, HTTP request patterns, deployment regressions, and forwarder health.",
+  "warehouse_id": "<DATABRICKS_WAREHOUSE_ID>",
+  "tables": [
+    {
+      "catalog": "grizl",
+      "schema": "observability",
+      "table": "raw_logs",
+      "description": "Source-of-truth GRIZL log events — backend HTTP requests, application errors, frontend telemetry, deployments, and forwarder health."
+    },
+    {
+      "catalog": "grizl",
+      "schema": "observability",
+      "table": "http_requests",
+      "description": "HTTP request events from grizl-backend. Use for route-level error and latency analysis."
+    },
+    {
+      "catalog": "grizl",
+      "schema": "observability",
+      "table": "application_errors",
+      "description": "ERROR and CRITICAL severity events across all services. Use for error signature analysis and incident investigation."
+    },
+    {
+      "catalog": "grizl",
+      "schema": "observability",
+      "table": "frontend_telemetry",
+      "description": "Browser telemetry from grizl-frontend. Use for page-level error analysis."
+    },
+    {
+      "catalog": "grizl",
+      "schema": "observability",
+      "table": "deployments",
+      "description": "Deployment metadata events. Use for correlating errors with specific deployment SHAs."
+    },
+    {
+      "catalog": "grizl",
+      "schema": "observability",
+      "table": "forwarder_health",
+      "description": "grizl-log-forwarder operational events. Use for diagnosing log pipeline health."
+    },
+    {
+      "catalog": "grizl",
+      "schema": "observability",
+      "table": "grizl_recent_anomaly_signals",
+      "description": "Active anomaly signals from all z-score detection views. Use for current incident context."
+    }
+  ],
+  "example_questions": [
+    "What are the most common errors on grizl-backend in the last hour?",
+    "Show me the error rate for /api/memes over the last 24 hours",
+    "Which deployment SHA has the most post-deploy errors?",
+    "Is the grizl-log-forwarder healthy? When was the last batch_sent event?",
+    "What error signatures are currently spiking?",
+    "Show me the top 5 slowest routes by p95 latency today",
+    "Are there any active anomaly signals in the last 15 minutes?"
+  ]
+}
