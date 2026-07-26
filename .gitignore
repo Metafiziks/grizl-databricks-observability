@@ -2,3 +2,5 @@ databricks/config/grizl.databricks.env
 .databricks/
 *.token
 *.pat
+security/snowflake/config/grizl.snowflake.security.env
+security/databricks/config/grizl.databricks.security.env
