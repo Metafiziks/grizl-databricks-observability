@@ -266,3 +266,7 @@ This is the same conceptual approach as KQL `series_decompose_anomalies()` witho
 - `databricks/scripts/check.sh` scans for credential material as a local guardrail.
 - The Databricks service principal needs `USE CATALOG`, `USE SCHEMA`, `SELECT`, and `MODIFY` on `grizl.observability` — not workspace-admin.
 - GitHub token is passed as a Workflow job parameter — it is visible in the Workflow run details. Scope it to `issues:write` on the target repos only.
+
+## License
+
+The code is released under the [MIT License](LICENSE). The Metafizik name and logo, and the articles and images under `marketing/`, are copyright Metafiziks and are not covered by that license.
